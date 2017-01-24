@@ -76,18 +76,6 @@ CREATE TABLE tab_order_limit (
 )
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-/* Creating a table named 'order_details' */
-CREATE TABLE order_details (
-  id SMALLINT() NOT NULL AUTO_INCREMENT,
-  order_id INT() NOT NULL,
-  seat_id SMALLINT() NOT NULL,
-  order_item SMALLINT() NOT NULL,
-  PRIMARY KEY (id),
-  CONSTRAINT fk_orderid FOREIGN KEY (order_item) REFERENCES menu (id),
-  CONSTRAINT fk_seatid FOREIGN KEY (seat_id) REFERENCES seat (id)
-)
-
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 /* Inserting values into the table 'tab_food_type' */
 INSERT INTO tab_food_type(id,TYPE,from_time,to_time,quantity) VALUES(1,'Breakfast','08:00:00','11:00:00',100);
 INSERT INTO tab_food_type(id,TYPE,from_time,to_time,quantity) VALUES(1,'Lunch','11:15:00','15:00:00',100);

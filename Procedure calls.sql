@@ -8,7 +8,6 @@ Procedures
 proc_make_order()         ----------------------------------->   Procedure that is used to place the order
 proc_process_order()      ----------------------------------->   Procedure that processess the order
 proc_cancel_order()       ----------------------------------->   Procedure that cancels the placed order item by item
-proc_view_order_details() ----------------------------------->   Procedure that displays the items ordered in a particular order
 proc_add_food()           ----------------------------------->   Procedure to add new items to the menu
 
 Functions
@@ -28,12 +27,11 @@ view_stock                   --------------------------------->   To view the re
 
 */
 
-CALL proc_make_order('seat2','Variety Rice,North Indian Thali','1,1',CURRENT_TIME)
+CALL proc_make_order('seat4','Idly,Dosa','1,1',CURRENT_TIME,@comments)
 
-CALL proc_cancel_order('seat4','Dosa');
+CALL proc_cancel_order(1,'seat3','Dosa',@cancel_comments);
 
 SELECT * FROM view_stock
 
-CALL view_order_details(931)
+CALL proc_add_food(15,'Poratta','Dinner',@add_food_message)
 
-CALL proc_add_food(22,'Porattas','Dinner')

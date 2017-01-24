@@ -1,21 +1,3 @@
-/*Function to check the seat status*/
-
-DELIMITER $$
-CREATE FUNCTION fn_seat_status(seatno VARCHAR(20)) RETURNS INT(11)
-BEGIN
-DECLARE states VARCHAR(20);
-DECLARE flag INT;
-SET states=(SELECT state FROM seat_status WHERE seat_id=(SELECT id FROM seat WHERE Seats=seatno));
-IF(states='Available')
-THEN
-SET flag=1;
-ELSE
-SET flag=0;
-END IF;
-RETURN flag;
-END $$
-DELIMITER ;
---------------------------------------------------------------------------------------------------------------------------------------------
 /*Function to check if the seat is valid*/
 
 DELIMITER $$
@@ -89,4 +71,39 @@ SET flag=0;
 END IF;
 RETURN flag;
 END$$
+DELIMITER ;
+-------------------------------------------------------------------------------------------
+/*Create a function to check the seat status*/
+
+DELIMITER $$
+CREATE FUNCTION fn_seat_status(seatno VARCHAR(20)) RETURNS INT(11)
+BEGIN
+DECLARE states VARCHAR(20);
+DECLARE flag INT;
+DECLARE toggle_seats BOOLEAN;
+SELECT user_state INTO toggle_seats FROM seat_status WHERE seat_id=(SELECT id FROM seat WHERE Seats=seatno);
+SET states=(SELECT state FROM seat_status WHERE seat_id=(SELECT id FROM seat WHERE Seats=seatno));
+IF(states='Available')
+THEN
+IF toggle_seats=FALSE
+THEN
+		UPDATE seat_status SET user_state=TRUE WHERE seat_id=(SELECT id FROM seat WHERE Seats=seatno);
+		SET FLAG=1;
+END IF;
+ELSE
+		SET FLAG=0;
+END IF;
+RETURN flag;
+END $$
+DELIMITER ;
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+/*Create a function to generate unique order_id*/
+
+DELIMITER $$
+CREATE FUNCTION rand_no() RETURNS INT(11)
+BEGIN
+DECLARE order_id INT;
+SET order_id=(SELECT IFNULL(MAX(ordered_id),0)+1 FROM food_transaction);
+RETURN order_id;
+END $$
 DELIMITER ;
