@@ -14,7 +14,7 @@ CREATE PROCEDURE proc_make_order(seatno VARCHAR(20),IN _list1 MEDIUMTEXT,IN _lis
           DECLARE counter INT;
           DECLARE local_order_id INT;
 	  SET counter=0;
-     
+          SET comments=" ";
         SET local_order_id=rand_no(); 
 	START TRANSACTION;
 	SET autocommit=0;
@@ -52,7 +52,8 @@ CREATE PROCEDURE proc_make_order(seatno VARCHAR(20),IN _list1 MEDIUMTEXT,IN _lis
                  ELSE
   /*Call the procedure foodOrder to order the items for requested seats*/ 
 		 CALL proc_process_order(local_order_id,seatno,_next1,_next2,CURRENT_TIME,@message);
-		 SELECT @message INTO comments;
+		 SET comments=CONCAT(comments,"|",@message);
+		 SELECT comments;
                  END IF;           
                  SET _list1 = INSERT(_list1,1,_nextlen1 + 1,'');
                  SET _list2 = INSERT(_list2,1,_nextlen2 + 1,'');

@@ -23,15 +23,15 @@ fn_quantity_valid()          --------------------------------->   Function to ch
 View
 ----
 
-view_stock                   --------------------------------->   To view the remaining stock details
+view_order                  ---------------------------------->   To view the remaining stock details
 
 */
-
-CALL proc_make_order('seat4','Idly,Dosa','1,1',CURRENT_TIME,@comments)
+DROP PROCEDURE proc_make_order
+CALL proc_make_order('seat4','Tea,coffees','1,1',CURRENT_TIME,@comments)
 
 CALL proc_cancel_order(1,'seat3','Dosa',@cancel_comments);
 
 SELECT * FROM view_stock
 
-CALL proc_add_food(15,'Poratta','Dinner',@add_food_message)
+CALL proc_add_food(15,'Poratta','Dinner',@add_food_message);
 

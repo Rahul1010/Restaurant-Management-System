@@ -1,3 +1,21 @@
+/*Function to check the seat status*/
+
+DELIMITER $$
+CREATE FUNCTION fn_seat_status(seatno VARCHAR(20)) RETURNS INT(11)
+BEGIN
+DECLARE states VARCHAR(20);
+DECLARE flag INT;
+SET states=(SELECT state FROM seat_status WHERE seat_id=(SELECT id FROM seat WHERE Seats=seatno));
+IF(states='Available')
+THEN
+SET flag=1;
+ELSE
+SET flag=0;
+END IF;
+RETURN flag;
+END $$
+DELIMITER ;
+--------------------------------------------------------------------------------------------------------------------------------------------
 /*Function to check if the seat is valid*/
 
 DELIMITER $$
@@ -75,8 +93,9 @@ DELIMITER ;
 -------------------------------------------------------------------------------------------
 /*Create a function to check the seat status*/
 
+
 DELIMITER $$
-CREATE FUNCTION fn_seat_status(seatno VARCHAR(20)) RETURNS INT(11)
+CREATE FUNCTION seat_status(seatno VARCHAR(20)) RETURNS INT(11)
 BEGIN
 DECLARE states VARCHAR(20);
 DECLARE flag INT;
@@ -86,18 +105,26 @@ SET states=(SELECT state FROM seat_status WHERE seat_id=(SELECT id FROM seat WHE
 IF(states='Available')
 THEN
 IF toggle_seats=FALSE
-THEN
+	THEN
+	       
 		UPDATE seat_status SET user_state=TRUE WHERE seat_id=(SELECT id FROM seat WHERE Seats=seatno);
 		SET FLAG=1;
-END IF;
-ELSE
+		
+	END IF;
+	ELSE
 		SET FLAG=0;
 END IF;
+
 RETURN flag;
+
 END $$
 DELIMITER ;
+
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 /*Create a function to generate unique order_id*/
+DROP FUNCTION rand_no;
 
 DELIMITER $$
 CREATE FUNCTION rand_no() RETURNS INT(11)
@@ -107,3 +134,12 @@ SET order_id=(SELECT IFNULL(MAX(ordered_id),0)+1 FROM food_transaction);
 RETURN order_id;
 END $$
 DELIMITER ;
+-------------------------------------------------------------------------------------------------------------------------------------------
+/*Creat a view to display the order details*/
+CREATE
+    /*[ALGORITHM = {UNDEFINED | MERGE | TEMPTABLE}]
+    [DEFINER = { user | CURRENT_USER }]
+    [SQL SECURITY { DEFINER | INVOKER }]*/
+    VIEW `rahul`.`view_order` 
+    AS
+(SELECT * FROM food_transaction);
